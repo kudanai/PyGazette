@@ -46,6 +46,7 @@ print(auth.access_token)
 it_jobs = client.fetch_page(
     iulaan_type=IulaanType.VAZEEFA,
     category=VazeefaType.INFORMATION_TECHNOLOGY,
+    page=1,
     extend_details=True
 )
 print(it_jobs)
