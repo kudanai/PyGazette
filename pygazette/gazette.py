@@ -48,17 +48,13 @@ class Gazette:
         """
         url = get_query_url(iulaan_type, category, page)
         response = httpx.get(url, headers=self._headers)
+        pg: Page = parse_response(response, Page)
 
-        if response.status_code == httpx.codes.OK:
-            pg: Page = parse_response(response, Page)
+        if extend_details:
+            details = asyncio.run(self._fetch_details_async(pg.data))
+            pg.data = details
 
-            if extend_details:
-                details = asyncio.run(self._fetch_details_async(pg.data))
-                pg.data = details
-
-            return pg.data
-        else:
-            response.raise_for_status()
+        return pg.data
 
     @requires_token(token)
     def iter_pages(self, iulaan_type: Optional[IulaanType] = None, category: Optional[VazeefaType] = None,
